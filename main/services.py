@@ -1,4 +1,5 @@
 import os
+from math import acos, sin, cos
 
 from PIL import Image
 from django.core.mail import send_mail
@@ -53,3 +54,49 @@ def report_mutual_sympathy(user1, user2):
         from_email,
         [user1.email],
     )
+
+
+def get_distance_between_clients(user1, user2):
+    """
+    Возвращает расстояние между двумя пользователями
+    """
+    if user1.has_coords and user2.has_coords:
+        return get_distance_between_points(user1.longitude, user1.latitude, user2.longitude, user2.latitude)
+
+
+def get_distance_between_points(lon1, lat1, lon2, lat2):
+    """
+    Рассчитывает и возвращает расстояние между двумя точками
+
+    lon1, lat1 - долгота и широта первой точки
+    lon2, lat2 - долгота и широта второй точки
+    """
+    # переводим градусы в радианы, т.к. этого требуют тригонометрические функции
+    args = [lon1, lat1, lon2, lat2]
+    lon1, lat1, lon2, lat2 = map(lambda x: float(x) / 57.3, args)
+
+    earth_radius = 6371.009  # радиус Земли в км
+
+    # расчет расстояния между точками https://en.wikipedia.org/wiki/Great-circle_distance
+    delta = acos(sin(lat1) * sin(lat2) + cos(lat1) * cos(lat2) * cos(lon2 - lon1))
+    distance = delta * earth_radius
+    return distance
+
+
+def get_longitude_delta(distance):
+    """
+    На основе значения distance рассчитывает отклонение значения longitude в градусах
+    """
+    # один градус географической долготы равен 111км
+    delta = distance / 111
+    return delta
+
+
+def get_latitude_delta(distance, latitude):
+    """
+    На основе значения distance рассчитывает отклонение значения latitude в градусах
+    """
+    # количество км в одном градусе географической широты непостоянно
+    # и рассчитывается по следующей формуле
+    delta = distance / (111.3 * cos(float(latitude) / 57.3))
+    return abs(delta)

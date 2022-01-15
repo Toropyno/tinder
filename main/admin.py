@@ -54,11 +54,13 @@ class UserAdmin(BaseUserAdmin):
     form = UserChangeForm
     add_form = UserCreationForm
 
-    list_display = ('email', 'id')
+    list_display = ('email', 'id', 'longitude', 'latitude')
     list_filter = ('email',)
+    list_editable = ('longitude', 'latitude')
     fieldsets = (
         ('Credentials', {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'photo', 'gender')}),
+        ('Location', {'fields': ('longitude', 'latitude')}),
         ('Likes', {'fields': ('likes',)}),
         ('Permissions', {'fields': ('is_staff', 'is_superuser', 'user_permissions', 'groups')}),
     )
