@@ -1,11 +1,13 @@
 from django.conf.urls.static import static
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 
 from tinder import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include('main.api.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
 if settings.DEBUG:

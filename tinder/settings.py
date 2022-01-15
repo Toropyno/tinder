@@ -40,6 +40,9 @@ INSTALLED_APPS = [
 
     # Мои приложения
     'main.apps.MainConfig',
+
+    # Сторонние приложения
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +138,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'main.User'
+
+LOGIN_URL = '/api/login/'
