@@ -59,6 +59,7 @@ class UserAdmin(BaseUserAdmin):
     fieldsets = (
         ('Credentials', {'fields': ('email', 'password')}),
         ('Personal info', {'fields': ('first_name', 'last_name', 'photo', 'gender')}),
+        ('Likes', {'fields': ('likes',)}),
         ('Permissions', {'fields': ('is_staff', 'is_superuser', 'user_permissions', 'groups')}),
     )
 
@@ -77,4 +78,4 @@ class UserAdmin(BaseUserAdmin):
         }),
     )
     ordering = ('email',)
-    filter_horizontal = ()
+    filter_horizontal = ('likes',)

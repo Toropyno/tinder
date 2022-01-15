@@ -43,6 +43,7 @@ class User(PermissionsMixin, AbstractBaseUser):
     photo = models.ImageField(upload_to='%Y/%m/')
     gender = models.CharField(choices=GENDER_CHOICES, max_length=1)
     is_staff = models.BooleanField(default=False)
+    likes = models.ManyToManyField('self', symmetrical=False, blank=True)
 
     USERNAME_FIELD = 'email'
 
