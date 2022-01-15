@@ -5,6 +5,9 @@ from . import views
 
 urlpatterns = format_suffix_patterns([
     path('', views.api_root),
+    path('list/',
+         views.UserListView.as_view(),
+         name='client-list'),
     path('clients/create/',
          views.CreateUserView.as_view(),
          name='client-create'),

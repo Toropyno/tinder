@@ -1,10 +1,11 @@
 from django.contrib.auth import get_user_model
 from rest_framework.decorators import api_view
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, ListAPIView
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
 from .serializers import UserSerializer
+from .filters import UserFilter
 from .. import services
 
 User = get_user_model()
@@ -17,6 +18,7 @@ def api_root(request, format=None):
     """
     return Response({
         'client-create': reverse('client-create', request=request, format=format),
+        'client-list': reverse('client-list', request=request, format=format),
     })
 
 
@@ -50,3 +52,14 @@ def client_match(request, id):
         services.report_mutual_sympathy(request_user, user)
         return Response(data)
     return Response()
+
+
+class UserListView(ListAPIView):
+    """
+    Представление списка пользователей
+    """
+    serializer_class = UserSerializer
+    filterset_class = UserFilter
+
+    def get_queryset(self):
+        return User.objects.exclude(id=self.request.user.id)

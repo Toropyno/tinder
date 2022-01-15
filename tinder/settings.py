@@ -43,6 +43,7 @@ INSTALLED_APPS = [
 
     # Сторонние приложения
     'rest_framework',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -148,3 +149,8 @@ EMAIL_HOST_USER = 'toropyno.evgeny@gmail.com'
 EMAIL_HOST_PASSWORD = 'vwgpwmnotlohfpch'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
+
+# rest_framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
+}
