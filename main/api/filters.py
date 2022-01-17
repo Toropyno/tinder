@@ -1,10 +1,23 @@
 from django.contrib.auth import get_user_model
+from django.db.models import F, Func, FloatField
 from django_filters import rest_framework as filters
 from rest_framework.exceptions import ValidationError
 
 from main import services
 
 User = get_user_model()
+
+
+class ACos(Func):
+    function = 'ACOS'
+
+
+class Sin(Func):
+    function = 'SIN'
+
+
+class Cos(Func):
+    function = 'COS'
 
 
 class UserFilter(filters.FilterSet):
@@ -49,6 +62,11 @@ class UserFilter(filters.FilterSet):
 
         # до оставшихся пользователей считаем расстояние и выбираем тех,
         # кто находится в пределах distance
-        filtered_users = list(
-            user.id for user in filtered_users if services.get_distance_between_clients(request_user, user) <= distance)
-        return User.objects.filter(id__in=filtered_users)
+        filtered_users = filtered_users.annotate(
+            dist=(ACos(Sin(F('latitude') / 57.3) * Sin(user_lat / 57.3) +
+                       Cos(F('latitude') / 57.3) * Cos(user_lat / 57.3) *
+                       Cos(user_lon / 57.3 - F('longitude') / 57.3),
+                       output_field=FloatField()))
+        ).filter(dist__lte=distance)
+
+        return filtered_users
