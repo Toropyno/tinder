@@ -62,10 +62,11 @@ class UserFilter(filters.FilterSet):
 
         # до оставшихся пользователей считаем расстояние и выбираем тех,
         # кто находится в пределах distance
+        degree_const = 57.3
         filtered_users = filtered_users.annotate(
-            dist=(ACos(Sin(F('latitude') / 57.3) * Sin(user_lat / 57.3) +
-                       Cos(F('latitude') / 57.3) * Cos(user_lat / 57.3) *
-                       Cos(user_lon / 57.3 - F('longitude') / 57.3),
+            dist=(ACos(Sin(F('latitude') / degree_const) * Sin(user_lat / degree_const) +
+                       Cos(F('latitude') / degree_const) * Cos(user_lat / 57.3) *
+                       Cos(user_lon / degree_const - F('longitude') / degree_const),
                        output_field=FloatField()))
         ).filter(dist__lte=distance)
 
